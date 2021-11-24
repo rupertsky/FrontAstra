@@ -53,7 +53,7 @@
                             <ion-icon name="document-text-outline" class="nav__icon"></ion-icon>                           
                             <span class="nav__name">Productos</span>
                         </a>                      
-                        <a href="Controlador?menu=Ventas&accion=Listar" target="myFrame" class="nav__link" onclick="return validarMenu('ventas')">
+                        <a href="Controlador?menu=Ventas&accion=default&UsuarioActivo=${usuario.getCedula_usuario()}" target="myFrame" class="nav__link" onclick="return validarMenu('ventas')">
                             <ion-icon name="grid-outline" class="nav__icon"></ion-icon>                           
                             <span class="nav__name">Ventas</span>
                         </a>

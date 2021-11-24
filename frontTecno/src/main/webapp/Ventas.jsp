@@ -67,7 +67,7 @@
        	                  <div class="col-sm-6 d-flex">
      	                            <input type="text" name="precioproducto" class="form-control"
                                      placeholder="$ 0000.00" 
-                                     value="${productoSeleccionado.getPrecio_venta()}">
+                                     value="${productoSeleccionado.getPrecio_venta()}" ><!-- disabled="disabled" -->
    	                         </div>
    	                         <div class="col-sm-3">
 	                            <input type="number" name="cantidadproducto" 
@@ -76,7 +76,7 @@
  	                         <div class="col-sm-3">
 	                             <input type="text" name="ivaproducto" class="form-control"
                                       placeholder="Valor iva"
-                                      value="${productoSeleccionado.getIvacompra()}" readonly="readonly">
+                                      value="${productoSeleccionado.getIva_compra()}" readonly="readonly">
 	                         </div>
 	                    </div>
                           <div class="form-group d-flex">
@@ -114,7 +114,7 @@
 								<tr>
 									<th>${lista.getCodigo_detalle_venta()}</th>
 									<td>${lista.getCodigo_producto()}</td>
-									<td>${lista.getDescripcion_producto()}</td>
+									<td>${lista.getNombre_producto()}</td><!-- descripcionproducto -->
 									<td>${lista.getPrecio_producto()}</td>
 									<td>${lista.getCantidad_producto()}</td>
 									<td>${lista.getValor_iva()}</td>
@@ -146,9 +146,8 @@
              </div>
              <div class="card-footer d-flex">
                    <div class="col-md-8">
-                     <a class="btn btn-success" onclick="print()"
-						href="Controlador?menu=Ventas&accion=GenerarVenta&cedulacliente=${clienteSeleccionado.getCedula_cliente()}
-						&UsuarioActivo=${usuarioSeleccionado.getCedula_usuario()}&numerofactura=${numerofactura}">Generar Venta</a>
+                     <a class="btn btn-success" onclick="print()" 
+                     href="Controlador?menu=Ventas&accion=GenerarVenta&cedulacliente=${clienteSeleccionado.getCedula_cliente()}&UsuarioActivo=${usuarioSeleccionado.getCedula_usuario()}&numerofactura=${numerofactura}">Generar Venta</a>
                      <a class="btn btn-danger" type="button"
                         href="Controlador?menu=Ventas&accion=NuevaVenta">Nueva Venta</a>
                         <script type="text/javascript">

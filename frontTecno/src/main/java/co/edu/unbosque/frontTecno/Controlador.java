@@ -35,12 +35,74 @@ public class Controlador extends HttpServlet {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	//**CODIGO KT**//*******************************************************************************************
+	//VARIABLES GENERALES***************************************************************************************
+	
+	double precio, iva, valor_iva, subtotal, totalapagar, acusubtotal, subtotaliva = 0;
+	int cantidad, item = 0;
+	long numfac = 0;
+	String descripcion, cedulaCliente, codProducto;
+	
+	Usuarios usuarios = new Usuarios();
+	Detalle_Venta detalle_venta = new Detalle_Venta();
+	List <Detalle_Venta> listaVentas = new ArrayList<>();
+	
+	
+	//MÉTODO PARA BUSCAR LA CÉDULA DEL CLIENTE*****************************************************************************
+	
+	
+	public void buscarCliente(String id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			ArrayList<Clientes> listac = ClienteJSON.getJSON();
+			for (Clientes clientes: listac) {
+				if(clientes.getCedula_cliente().equals(id)) {
+					System.out.println(clientes.getNombre_cliente());
+					request.setAttribute("clienteSeleccionado", clientes);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	//MÉTODO PARA BUSCAR LA CÉDULA DEL CLIENTE*****************************************************************************
+	
+	
+	public void buscarProducto(String id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			ArrayList<Productos> listap = ProductoJSON.getJSON();
+			for (Productos productos: listap) {
+				if(productos.getCodigo_producto().equals(id)) {
+					
+					request.setAttribute("productoSeleccionado", productos);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//************************************************************************************************************************//
+	
+	
+	
+	
+	
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
 						ServletException, IOException {
 		
 		String menu=request.getParameter("menu");		
 		String accion=request.getParameter("accion");
+		
+	//**CODIGO KT***************************************************************************************************************//
+	//**CEDULA USUARIO ACTIVO PARA VENTAS**//
+	
+		String cedula_usuario_activo = request.getParameter("UsuarioActivo");
+		usuarios.setCedula_usuario(cedula_usuario_activo);
+		request.setAttribute("usuarioSeleccionado", usuarios);
+	//**************************************************************************************************************************//
 		
 		switch (menu) {
 			case "New_usuarios":
@@ -352,6 +414,98 @@ public class Controlador extends HttpServlet {
 				break;
 				
 				case "Ventas":
+					//***************enviar al formulario la cc de usuario y numfac****KT*************///
+					request.setAttribute("usuarioSeleccionado", usuarios);
+					request.setAttribute("numerofactura", numfac);
+					//***************e*************************************************KT*************///
+					if(accion.equals("BuscarCliente")) {
+						String id = request.getParameter("cedulacliente");
+						this.buscarCliente(id,request, response);
+					}else if(accion.equals("BuscarProducto")){
+						String id = request.getParameter("cedulacliente");
+						this.buscarCliente(id,request, response);
+						String cod = request.getParameter("codigoproducto");
+						this.buscarProducto(cod, request, response);
+					}else if(accion.equals("AgregarProducto")){
+						String id = request.getParameter("cedulacliente");
+						this.buscarCliente(id,request, response);
+						
+						detalle_venta = new Detalle_Venta();
+						item++;
+						totalapagar=0;
+						codProducto=request.getParameter("codigoproducto");
+						descripcion=request.getParameter("nombreproducto");
+						precio=Double.parseDouble(request.getParameter("precioproducto"));
+						cantidad=Integer.parseInt(request.getParameter("cantidadproducto"));
+						iva= Double.parseDouble(request.getParameter("ivaproducto"));
+						
+						subtotal = precio*cantidad;
+						valor_iva = (subtotal*iva)/100;
+						
+						detalle_venta.setCodigo_detalle_venta(item);
+						detalle_venta.setCodigo_producto(codProducto);
+						detalle_venta.setNombre_producto(descripcion);
+						detalle_venta.setCantidad_producto(cantidad);
+						detalle_venta.setPrecio_producto(precio);
+						detalle_venta.setCodigo_venta(numfac);
+						detalle_venta.setValor_iva(valor_iva);
+						detalle_venta.setValor_venta(subtotal);
+						listaVentas.add(detalle_venta);
+						
+						for (int i=0; i<listaVentas.size(); i++) {
+							acusubtotal+=listaVentas.get(i).getValor_venta();
+							subtotaliva+=listaVentas.get(i).getValor_iva();
+							
+						}
+						totalapagar=acusubtotal+subtotaliva;
+						detalle_venta.setValor_total(totalapagar);
+						
+						//primer parametro es como lo vamos a llamar desde el jsp / segundo atributo lo que se envia y como lo recibe el formulario 
+						request.setAttribute("listaventas", listaVentas);
+						request.setAttribute("totalsubtotal", acusubtotal);
+						request.setAttribute("totaliva", subtotaliva);
+						request.setAttribute("totalapagar", totalapagar);
+					
+					}else if(accion.equals("GenerarVenta")) {
+						cedulaCliente=request.getParameter("cedulacliente");
+						String numFact = request.getParameter("numerofactura");
+						
+						Ventas ventas= new Ventas();
+						
+						ventas.setCodigo_venta(Long.parseLong(numFact));
+						ventas.setCedula_cliente(cedulaCliente);
+						ventas.setCedula_usuario(usuarios.getCedula_usuario());
+						ventas.setValor_venta(acusubtotal);
+						ventas.setIva_venta(subtotaliva);
+						ventas.setTotal_venta(totalapagar);
+						
+						int respuesta=0;
+						try {
+							respuesta = VentasJSON.postJSON(ventas);
+							PrintWriter write = response.getWriter();
+							if(respuesta==200) {
+								System.out.println("Grabación exitosa" + respuesta);
+							}else {
+								write.println("Error Ventas:" + respuesta);
+							}
+							write.close();
+							} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						
+					}else {
+						//* codigo kt**numero de factura mienstras tanto
+						String factura = null;
+						if (factura==null) {
+							factura="1";
+							numfac=Integer.parseInt(factura)+1;
+						}else {
+							numfac=Integer.parseInt(factura)+1;
+						}
+						request.setAttribute("numerofactura", numfac);
+					}
+					
 					request.getRequestDispatcher("/Ventas.jsp").forward(request, response);
 				break;
 				
