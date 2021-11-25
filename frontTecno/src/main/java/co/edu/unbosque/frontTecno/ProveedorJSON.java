@@ -15,37 +15,36 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
-public class ClienteJSON {
+public class ProveedorJSON {
 	private static URL url;
-	private static String sitio = "http://localhost:8081/";
+	private static String sitio = "http://localhost:8082/";
 	
-	//*********Métodos que permite mostrar los registros de la tabla Clientes**************
+	//*********Métodos que permite mostrar los registros de la tabla Proveedores**************
 	
-	public static ArrayList<Clientes> parsingClientes(String json) throws ParseException {
+	public static ArrayList<Proveedores> parsingProveedores(String json) throws ParseException {
 		JSONParser jsonParser = new JSONParser();
-		ArrayList<Clientes> lista = new ArrayList<Clientes>();
-		JSONArray clientes = (JSONArray) jsonParser.parse(json);
-		Iterator i = clientes.iterator();
+		ArrayList<Proveedores> lista = new ArrayList<Proveedores>();
+		JSONArray proveedores = (JSONArray) jsonParser.parse(json);
+		Iterator i = proveedores.iterator();
 		while (i.hasNext()) {
 			JSONObject innerObj = (JSONObject) i.next();
-			Clientes cliente = new Clientes();
-			cliente.set_id(innerObj.get("_id").toString());
-			cliente.setCedula_cliente(innerObj.get("cedula_cliente").toString());			
-			cliente.setNombre_cliente(innerObj.get("nombre_cliente").toString());
-			cliente.setEmail_cliente(innerObj.get("email_cliente").toString());
-			cliente.setDireccion_cliente(innerObj.get("direccion_cliente").toString());
-			cliente.setTelefono_cliente(innerObj.get("telefono_cliente").toString());
-			lista.add(cliente);
+			Proveedores proveedor = new Proveedores();
+			proveedor.set_id(innerObj.get("_id").toString());
+			proveedor.setNit_proveedor(innerObj.get("nit_proveedor").toString());			
+			proveedor.setNombre_proveedor(innerObj.get("nombre_proveedor").toString());
+			proveedor.setCiudad_proveedor(innerObj.get("ciudad_proveedor").toString());
+			proveedor.setDireccion_proveedor(innerObj.get("direccion_proveedor").toString());
+			proveedor.setTelefono_proveedor(innerObj.get("telefono_proveedor").toString());
+			lista.add(proveedor);
 		}
 		return lista;
 	}
 	//*****************************************************************************
 	
 	//*********Método que consume la API de listar*********************************
-	public static ArrayList<Clientes> getJSON() throws IOException, ParseException {
+	public static ArrayList<Proveedores> getJSON() throws IOException, ParseException {
 		
-		url = new URL(sitio + "api/clientes/listar");
+		url = new URL(sitio + "api/proveedores/listar");
 		HttpURLConnection http = (HttpURLConnection)url.openConnection();
 		
 		http.setRequestMethod("GET");
@@ -58,17 +57,17 @@ public class ClienteJSON {
 			json += (char) inp[i];
 		}
 		
-		ArrayList<Clientes> lista = new ArrayList<Clientes>();
-		lista = parsingClientes(json);
+		ArrayList<Proveedores> lista = new ArrayList<Proveedores>();
+		lista = parsingProveedores(json);
 		http.disconnect();
 		return lista;
 	}
 	//*****************************************************************************
 	
 	//*********Método que consume la API de guardar*********************************
-	public static int postJSON(Clientes cliente) throws IOException {
+	public static int postJSON(Proveedores proveedor) throws IOException {
 		
-		url = new URL(sitio + "api/clientes/guardar");
+		url = new URL(sitio + "api/proveedores/guardar");
 		HttpURLConnection http;
 		http = (HttpURLConnection)url.openConnection();
 		
@@ -83,11 +82,11 @@ public class ClienteJSON {
 		http.setRequestProperty("Content-Type", "application/json");
 		
 		String data = "{" 
-				+ "\"cedula_cliente\":\"" + cliente.getCedula_cliente()				
-				+ "\",\"nombre_cliente\": \"" + cliente.getNombre_cliente() 
-				+ "\",\"email_cliente\": \""  + cliente.getEmail_cliente() 
-				+ "\",\"direccion_cliente\":\"" + cliente.getDireccion_cliente() 
-				+ "\",\"telefono_cliente\":\"" + cliente.getTelefono_cliente() 
+				+ "\"nit_proveedor\":\"" + proveedor.getNit_proveedor()		
+				+ "\",\"nombre_proveedor\": \"" + proveedor.getNombre_proveedor() 
+				+ "\",\"ciudad_proveedor\": \""  + proveedor.getCiudad_proveedor() 
+				+ "\",\"direccion_proveedor\":\"" + proveedor.getDireccion_proveedor() 
+				+ "\",\"telefono_proveedor\":\"" + proveedor.getTelefono_proveedor() 
 				+ "\"}";
 		
 		byte[] out = data.getBytes(StandardCharsets.UTF_8);
@@ -101,9 +100,9 @@ public class ClienteJSON {
 	//*****************************************************************************
 	
 	//*********Método que consume la API de Actualizar*********************************
-	public static int putJSON(Clientes cliente, String id) throws IOException {
+	public static int putJSON(Proveedores proveedor, String id) throws IOException {
 		
-		url = new URL(sitio + "api/clientes/actualizar");
+		url = new URL(sitio + "api/proveedores/actualizar");
 		HttpURLConnection http;
 		http = (HttpURLConnection)url.openConnection();
 		
@@ -117,11 +116,11 @@ public class ClienteJSON {
 		http.setRequestProperty("Content-Type", "application/json");
 		
 		String data = "{" + "\"_id\":\"" + id 
-				+ "\",\"cedula_cliente\":\"" + cliente.getCedula_cliente()
-				+ "\",\"nombre_cliente\": \"" + cliente.getNombre_cliente() 
-				+ "\",\"email_cliente\": \"" + cliente.getEmail_cliente() 
-				+ "\",\"direccion_cliente\":\"" + cliente.getDireccion_cliente() 
-				+ "\",\"telefono_cliente\":\"" + cliente.getTelefono_cliente() 
+				+ "\",\"nit_proveedor\":\"" + proveedor.getNit_proveedor()
+				+ "\",\"nombre_proveedor\": \"" + proveedor.getNombre_proveedor() 
+				+ "\",\"ciudad_proveedor\": \"" + proveedor.getCiudad_proveedor() 
+				+ "\",\"direccion_proveedor\":\"" + proveedor.getDireccion_proveedor() 
+				+ "\",\"telefono_proveedor\":\"" + proveedor.getTelefono_proveedor() 
 				+ "\"}";
 		
 		byte[] out = data.getBytes(StandardCharsets.UTF_8);
@@ -136,7 +135,7 @@ public class ClienteJSON {
 	//*********Método que consume la API de Eliminar*********************************
 	public static int deleteJSON(String id) throws IOException {
 		
-		url = new URL(sitio + "api/clientes/eliminar/" + id);
+		url = new URL(sitio + "api/proveedores/eliminar/" + id);
 		HttpURLConnection http;
 		http = (HttpURLConnection)url.openConnection();
 		
@@ -155,3 +154,4 @@ public class ClienteJSON {
 	}
 	//*******************************************************************************
 }
+
