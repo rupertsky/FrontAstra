@@ -85,9 +85,58 @@ public class Controlador extends HttpServlet {
 	}
 	//************************************************************************************************************************//
 	
+	//MÉTODO PARA GRABAR LA VENTA*****************************************************************************
 	
+	public void grabarDetalle_Ventas(Long numFact, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		for (int i=0; i<listaVentas.size();i++) {
+			detalle_venta = new Detalle_Venta();
+			detalle_venta.setCodigo_venta(numFact);
+			detalle_venta.setCodigo_producto(listaVentas.get(i).getCodigo_producto());
+			detalle_venta.setValor_venta(listaVentas.get(i).getValor_venta());
+			detalle_venta.setValor_total(listaVentas.get(i).getValor_total());
+			detalle_venta.setValor_iva(listaVentas.get(i).getValor_iva());
+			
+			int respuesta=0;
+			try {
+				respuesta=DetalleVentaJSON.postJSON(detalle_venta);
+				PrintWriter write = response.getWriter();
+				if(respuesta==200) {
+					System.out.println("Registro grabado en Detalle Ventas" + i);
+					request.getRequestDispatcher("Controlador?menu=Ventas&accion=default").forward(request, response);
+				}else {
+					write.println("Error detalle venta "+respuesta);
+				}
+				write.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+		}	
+		
+	}
+	//************************************************************************************************************************//
 	
+	//MÉTODO PARA GENERAR CONSECUTIVO********************************************************************************************//
 	
+	public Long generarConsecutivo() {
+		long aux=0;
+		try {
+			ArrayList<Ventas> listaventas = VentasJSON.getJSON();
+			for(Ventas venta:listaventas) {
+				if(venta.getCodigo_venta()>aux) {
+					aux=venta.getCodigo_venta();
+				}
+				
+			}
+			return aux+1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return aux+1;
+	}
+	
+	//************************************************************************************************************************//
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
@@ -540,6 +589,7 @@ public class Controlador extends HttpServlet {
 							subtotaliva+=listaVentas.get(i).getValor_iva();
 							
 						}
+						
 						totalapagar=acusubtotal+subtotaliva;
 						detalle_venta.setValor_total(totalapagar);
 						
@@ -568,6 +618,7 @@ public class Controlador extends HttpServlet {
 							PrintWriter write = response.getWriter();
 							if(respuesta==200) {
 								System.out.println("Grabación exitosa" + respuesta);
+								this.grabarDetalle_Ventas(ventas.getCodigo_venta(), request, response);
 							}else {
 								write.println("Error Ventas:" + respuesta);
 							}
@@ -575,20 +626,16 @@ public class Controlador extends HttpServlet {
 							} catch (Exception e) {
 							e.printStackTrace();
 						}
-						
-						
+						listaVentas.clear();
+						item=0;
+						totalapagar=0;
+						acusubtotal=0;
+						subtotaliva=0;
 					}else {
-						//* codigo kt**numero de factura mienstras tanto
-						String factura = null;
-						if (factura==null) {
-							factura="1";
-							numfac=Integer.parseInt(factura)+1;
-						}else {
-							numfac=Integer.parseInt(factura)+1;
-						}
+						numfac=this.generarConsecutivo();
 						request.setAttribute("numerofactura", numfac);
 					}
-					
+						
 					request.getRequestDispatcher("/Ventas.jsp").forward(request, response);
 				break;
 				
