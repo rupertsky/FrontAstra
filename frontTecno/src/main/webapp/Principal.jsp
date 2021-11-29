@@ -57,7 +57,7 @@
                             <ion-icon name="grid-outline" class="nav__icon"></ion-icon>                           
                             <span class="nav__name">Ventas</span>
                         </a>
-                        <a href="Controlador?menu=Reportes&accion=Listar" target="myFrame" class="nav__link" onclick="return validarMenu('reportes')">
+                        <a href="Controlador?menu=Reportes&accion=default" target="myFrame" class="nav__link" onclick="return validarMenu('reportes')">
                             <ion-icon name="grid-outline" class="nav__icon"></ion-icon>                           
                             <span class="nav__name">Reportes</span>
                         </a>

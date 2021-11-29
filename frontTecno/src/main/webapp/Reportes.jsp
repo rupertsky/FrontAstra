@@ -41,6 +41,7 @@
             				<label>Detalle de Reporte</label>
             			</div>
             			<table class="table">
+            			<c:if test="${opcion==1}">
             				<thead class="thead-dark">
             					<tr>
             						<th scope="col">Cedula</th>
@@ -51,15 +52,18 @@
             					</tr>
             				</thead>
             				<tbody>
+            				<c:forEach var="lista" items="${listaClientes}">
             					<tr>
-            						<td></td>
-            						<td></td>
-            						<td></td>
-            						<td></td>
-            						<td></td>
+            						<td>${lista.getCedula_cliente()}</td>
+            						<td>${lista.getNombre_cliente()}</td>
+            						<td>${lista.getEmail_cliente()}</td>
+            						<td>${lista.getDireccion_cliente()}</td>
+            						<td>${lista.getTelefono_cliente()}</td>
             					</tr>
+            				</c:forEach>
             				</tbody>
-            				
+            				</c:if>
+            				<c:if test="${opcion==2}">
             				<thead class="thead-dark">
             					<tr>
             						<th scope="col">Codigo Venta</th>
@@ -70,14 +74,17 @@
             					</tr>
             				</thead>
             				<tbody>
+            				<c:forEach var="lista" items="${listaVentas}">
             					<tr>
-            						<td></td>
-            						<td></td>
-            						<td></td>
-            						<td></td>
-            						<td></td>
+            						<td>${lista.getCodigo_venta()}</td>
+            						<td>${lista.getCedula_cliente()}</td>
+            						<td>${lista.getValor_venta()}</td>
+            						<td>${lista.getIva_venta()}</td>
+            						<td>${lista.getTotal_venta()}</td>
             					</tr>
+            				</c:forEach>	
             				</tbody>
+            				</c:if>
             				
             			</table>
             		</div>
