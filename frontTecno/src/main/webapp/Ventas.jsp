@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
 	                    	<div class="logo mt-4 mb-4">
-	                    		<img src="img/icon.jpg" class="icon" alt="100" width="100"/>
+	                    		<img src="img/casconeon.png" class="icon" alt="100" width="100"/>
 	                    	</div>
                         <div class="form-group">
 	                      <h4 class="card-title" style="color: white;">Datos Clientes</h4>
