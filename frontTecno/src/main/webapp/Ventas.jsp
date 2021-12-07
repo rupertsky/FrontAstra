@@ -16,6 +16,28 @@
         <div class="row">
             <div class="col-md-5 seccion1">
             <form method="get" action="Controlador">
+            <div class="card">
+            	<div class="card-body">
+            		<div class="form-group d-flex">
+            			<div class="col-sm-6 d-flex">
+            				<input type="date" name="fecha" class="form-control" value="${fechaSeleccionada}">
+            			</div>
+            			<div class="col-sm-3">
+            				<label>Seleccione la ciudad</label>
+            				
+            			</div>
+            			<div class="col-sm-3">
+            				<select name="ciudad" class="form-select">
+            					<option>${ciudadSeleccionada}</option>
+            					<option value="Bogota">Bogota</option>
+            					<option value="Cali">Cali</option>
+            					<option value="Medellin">Medellin</option>
+            				</select>
+            			</div>
+            		</div>
+            		 
+            	</div>
+            </div>
                 <div class="card">
                     <div class="card-body">
 	                    	<div class="logo mt-4 mb-4">

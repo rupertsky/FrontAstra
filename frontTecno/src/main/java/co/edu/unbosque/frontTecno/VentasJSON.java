@@ -45,6 +45,8 @@ public class VentasJSON {
 				+ "\",\"iva_venta\":\"" + venta.getIva_venta() 
 				+ "\",\"total_venta\":\"" + venta.getTotal_venta()
 				+ "\",\"valor_venta\":\"" + venta.getValor_venta()
+				+ "\",\"fecha_venta\":\"" + venta.getFecha_venta()
+				+ "\",\"ciudad_venta\":\"" + venta.getCiudad_venta()
 				+ "\"}";
 		
 		byte[] out = data.getBytes(StandardCharsets.UTF_8);
